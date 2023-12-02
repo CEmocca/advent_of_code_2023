@@ -27,7 +27,7 @@ class Day1:
         }
         pass
 
-    def find_two_digits(self, input: str) -> (int, int):
+    def find_two_digits(self, input: str) -> int:
         i = 0
         j = len(input) - 1
 
