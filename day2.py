@@ -52,8 +52,8 @@ class Day2:
     # return game_id if valid cube
     def valid_cube_in_game(self, cube_data: CubeGameData) -> int:
         for cube_set in cube_data.cube_datasets:
-            for cube in cube_set.cube_data:
-                if cube_set.cube_data[cube] > self.possible_cube[cube]:
+            for key, value in cube_set.cube_data.items():
+                if value > self.possible_cube[key]:
                     return 0
         return cube_data.game
     
