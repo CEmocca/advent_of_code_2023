@@ -25,7 +25,6 @@ class Day1:
             'thgie': '8',
             'enin': '9',
         }
-        pass
 
     def find_two_digits(self, input: str) -> int:
         i = 0
