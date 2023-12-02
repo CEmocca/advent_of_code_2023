@@ -91,6 +91,5 @@ class Day2:
 day2 = Day2({'red': 12, 'green': 13, 'blue': 14})
 
 inputs = read_file('input_data/day_2.txt')
-
 print(day2.determine_cube(inputs))
 
