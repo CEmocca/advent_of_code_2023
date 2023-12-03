@@ -14,9 +14,7 @@ class Day3:
         for line in input:
             j = 0
             while j < len(line):
-                # change all symbol to * except for . and digit
-                replaced = '*' if line[j].isdigit() == False and line[j] != '.' else line[j]
-                self.matrix[i][j] = replaced
+                self.matrix[i][j] = line[j]
                 j += 1
             i += 1
 
@@ -24,27 +22,27 @@ class Day3:
         col_len = len(self.matrix[i]) 
         row_len = len(self.matrix) 
 
-        if i - 1 >= 0 and (self.matrix[i - 1][j] == '*' or self.matrix[i - 1][j].isdigit()):
+        if i - 1 >= 0 and (self.matrix[i - 1][j] != '.'):
             return True
-        elif i - 1 >= 0 and j - 1 >= 0 and (self.matrix[i - 1][j - 1] == '*' or self.matrix[i - 1][j - 1].isdigit()):
+        elif i - 1 >= 0 and j - 1 >= 0 and (self.matrix[i - 1][j - 1] != '.'):
             return True
-        elif i - 1 >= 0 and j + 1 < col_len and (self.matrix[i - 1][j + 1] == '*' or self.matrix[i - 1][j + 1].isdigit()):
+        elif i - 1 >= 0 and j + 1 < col_len and (self.matrix[i - 1][j + 1] != '.'):
             return True
-        elif j - 1 >= 0 and (self.matrix[i][j - 1] == '*'):
+        elif j - 1 >= 0 and (self.matrix[i][j - 1] != '.' and not self.matrix[i][j - 1].isdigit()):
             return True
-        elif j + 1 < col_len and (self.matrix[i][j + 1] == '*'):
+        elif j + 1 < col_len and (self.matrix[i][j + 1] != '.' and not self.matrix[i][j + 1].isdigit()):
             return True
-        elif i + 1 < row_len and j - 1 >= 0 and (self.matrix[i + 1][j - 1] == '*' or self.matrix[i + 1][j - 1].isdigit()):
+        elif i + 1 < row_len and j - 1 >= 0 and (self.matrix[i + 1][j - 1] != '.'):
             return True
-        elif i + 1 < row_len and j + 1 < col_len and (self.matrix[i + 1][j + 1] == '*' or self.matrix[i + 1][j + 1].isdigit()):
+        elif i + 1 < row_len and j + 1 < col_len and (self.matrix[i + 1][j + 1] != '.'):
             return True
-        elif i + 1 < row_len and (self.matrix[i + 1][j] == '*' or self.matrix[i + 1][j].isdigit()):
+        elif i + 1 < row_len and (self.matrix[i + 1][j] != '.'):
             return True
         else:
             return False
         
 
-    def find_un_adjacent(self):
+    def find_adjacent(self):
         adjacent_number = []
 
         for i in range(len(self.matrix)):
@@ -54,7 +52,7 @@ class Day3:
                     is_adjacent = self.check_adjacent(i, j)
                     num.append((self.matrix[i][j], is_adjacent))
                     # print(f'({i}, {j}) num = {"".join(map(lambda x: x[0], num))} is_adjacent: {is_adjacent}')
-                if self.matrix[i][j] == '.' or self.matrix[i][j] == '*' or j == len(self.matrix[i]) - 1:
+                if not self.matrix[i][j].isdigit() or j == len(self.matrix[i]) - 1:
                     num_adjacent = False
                     number = ''
                     for item in num:
@@ -67,28 +65,13 @@ class Day3:
         return adjacent_number
     
     def solution_1(self):
-        un_adjacent = self.find_un_adjacent()
+        un_adjacent = self.find_adjacent()
         sum = 0
         for item in un_adjacent:
             sum += int(item)
 
         return sum
-
-class Day3Part2:
-    def __init__(self, input: list[str]):
-        col = len(input[0])
-        row = len(input)
-
-        self.matrix: list[list[str]] = [[0 for x in range(col)] for y in range(row)]
-
-        i = 0
-        for line in input:
-            j = 0
-            while j < len(line):
-                self.matrix[i][j] = line[j]
-                j += 1
-            i += 1
-
+    
     def part_two_get_adjacent(self, i: int, j: int) -> list[tuple[int, int]]:
         col_len = len(self.matrix[i])
         row_len = len(self.matrix)
@@ -149,7 +132,6 @@ class Day3Part2:
     
     def part_two(self):
         sum = 0
-        print(range(len(self.matrix)))
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix[i])):
                 if self.matrix[i][j] == '*':
@@ -166,6 +148,4 @@ input_day3 = read_file('input_data/day_3.txt')
 day3 = Day3(input_day3)
 
 print(day3.solution_1())
-
-day3_part2 = Day3Part2(input_day3)
-print(day3_part2.part_two())
+print(day3.part_two())
