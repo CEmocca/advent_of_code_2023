@@ -47,10 +47,9 @@ class Day4:
             else:
                 sum += 2 ** (number_of_winning_cards - 1)
 
-            # print(range(index + 1, index + 1 + number_of_winning_cards))
-            print(count, winning_cards, my_cards, my_winning_cards, number_of_winning_cards)
-            for cc in range(index + 1, index + 1 + number_of_winning_cards):
-                self.formatted_data[cc][0] += count
+            # add winning copy to the next n card
+            for i in range(index + 1, index + 1 + number_of_winning_cards):
+                self.formatted_data[i][0] += count
 
         return (sum, self.count_cards())
     
