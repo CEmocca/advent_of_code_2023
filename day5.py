@@ -4,24 +4,17 @@ from functools import reduce
 
 class Day5:
     def __init__(self, input: str):
-        self.seed_to_soid = {}
-        self.soid_to_fertilizer = {}
-        self.fertilizer_to_water = {}
-        self.water_to_light = {}
-        self.light_to_temperature = {}
-        self.temperature_to_humidity = {}
-        self.humidity_to_location = {}
+        # self.seed_to_soid = {}
+        # self.soid_to_fertilizer = {}
+        # self.fertilizer_to_water = {}
+        # self.water_to_light = {}
+        # self.light_to_temperature = {}
+        # self.temperature_to_humidity = {}
+        # self.humidity_to_location = {}
         # self.max_seed = None
 
         self.inputs = input.split('\n\n')
         self.seeds = self.inputs[0].split(':')[-1].strip().split(' ')
-
-        self.visited_soil = {}
-        self.visited_fertilizer = {}
-        self.visited_water = {}
-        self.visited_light = {}
-        self.visited_temperature = {}
-        self.visited_humidity = {}
 
         # self.seed_to_soid = self.generate_source_destination(inputs[1])
         # self.max_seed = max(self.seed_to_soid.keys())
@@ -117,20 +110,71 @@ class Day5:
 
         return min_location
     
+
+    def find_target_part_2(self, input: str, seed: int):
+
+        mappings = input.split('\n')[1:]
+        
+        in_range = None
+
+        for mapping in mappings:
+            start_destination, start_source, path_range = mapping.split(' ')
+            # print(f'start = {start_destination}, end = {int(start_destination) + int(path_range) - 1}')
+            if seed >= int(start_destination) and seed <= int(start_destination) + int(path_range) - 1:
+                in_range = [int(start_destination), int(start_source)]
+                break
+
+        if in_range:
+            return seed - in_range[0] + in_range[1]
+        else:
+            return seed
+        
+    def find_seed(self, location: int):
+        humidity = self.find_target_part_2(self.inputs[7], location)
+        temperature = self.find_target_part_2(self.inputs[6], humidity)
+        light = self.find_target_part_2(self.inputs[5], temperature)
+        water = self.find_target_part_2(self.inputs[4], light)
+        fertilizer = self.find_target_part_2(self.inputs[3], water)
+        soid = self.find_target_part_2(self.inputs[2], fertilizer)
+        seed = self.find_target_part_2(self.inputs[1], soid)
+        
+        return seed
+
+    def part_2(self):
+        part_2 = None
+        part_2_seeds = []
+        i = 0
+
+        while i < len(self.seeds):
+            print(f'start generating seed for index ({i}, {i+1})')
+            start = int(self.seeds[i])
+            end = int(self.seeds[i + 1])
+            generated_seeds = [start, start + end - 1]
+            part_2_seeds.append(generated_seeds)
+            i += 2
+
+        print(f'finished processing generated seeds: {len(part_2_seeds)}')
+
+        ii = 0
+        while True:
+            if ii % 100000 == 0:
+                print(f'processing location: {ii}')
+            seed = self.find_seed(ii)
+            for seeds in part_2_seeds:
+                if seed >= seeds[0] and seed <= seeds[1]:
+                    part_2 = ii
+
+            if part_2:    
+                break
+            ii += 1
+        
+        return part_2
+    
     def solution(self):
 
         part_1 = self.part_1(self.seeds)
-
-        part_2 = sys.maxsize
-
-        i = 0
-        while i < len(self.seeds):
-            print(f'start processing {i}, {i+1}')
-            start = int(self.seeds[i])
-            end = int(self.seeds[i + 1])
-            generated_seeds = [i for i in range(start, start + end)]
-            part_2 = min(part_2, self.part_1(generated_seeds))
-            i += 2
+        print(f'part_1 ans: {part_1}')
+        part_2 = self.part_2()
 
         return [part_1, part_2]
 
